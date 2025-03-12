@@ -114,6 +114,7 @@ def output_result(theta0, theta1, output_file):
     print(f"Theta0: {theta0}, Theta1: {theta1}")
     try:
         open(output_file, "w").write(f"{{\"theta0\": {theta0}, \"theta1\": {theta1}}}")
+        print(f"Results successfully saved to {output_file}")
     except PermissionError:
         print(f"Permission denied to write to file {output_file}. Please check the permissions.", file=sys.stderr)
 
@@ -131,7 +132,7 @@ if __name__ == '__main__':
     argparser.add_argument('--graphical', "-g", action="store_true", help='Show graphical representation of the dataset (default: True)')
     argparser.add_argument('--errors', "-e", action="store_true", help='Show graphical representation of the dataset (default: True)')
     argparser.add_argument('--learning_rate', "-lr", type=float, default=0.01, help='Learning rate for the gradient descend algorithm (default: 0.01)')
-    argparser.add_argument('--output', "-o", type=str, default='result.json', help='Output file for the results (default: result.json)')
+    argparser.add_argument('--output', "-o", type=str, default='', help='Output file for the results as JSON (default: None)')
 
     # Parse the arguments
     args = argparser.parse_args()
@@ -153,7 +154,8 @@ if __name__ == '__main__':
 
     theta0, theta1 = ft_linear_regression(data)
 
-    output_result(theta0, theta1, args.output)
+    if args.output:
+        output_result(theta0, theta1, args.output)
 
     if args.graphical:
         linear_regression_window(original_x, original_y, theta0, theta1)
