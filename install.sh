@@ -10,4 +10,4 @@ fi
 python3 -m venv $FOLDER_NAME
 source $FOLDER_NAME/bin/activate
 
-python3 -m pip install -r requirement.txt
+python3 -m pip install -r requirements.txt
