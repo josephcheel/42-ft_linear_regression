@@ -1,12 +1,20 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import argparse
+import sys
+import signal
 
 LEARNING_RATE = 0.01
 MINIMUM_STEP_SIZE = 0.0001
 MAXIMUM_NUMBER_OF_STEPS = 1000
 
 error_list = []
+def handle_interrupt(signal, frame):
+    print("Ctrl+C detected! Closing the figure.")
+    plt.close('all')
+    sys.exit(0)
+
+signal.signal(signal.SIGINT, handle_interrupt)
 
 def linear_regression_window(original_x, original_y, theta0, theta1):
     plt.figure(figsize=(10, 6))
@@ -87,12 +95,22 @@ def ft_linear_regression(data):
 
 
 def parse_dataset(file_path, delimiter=',', skip_header=True):
-	data = np.genfromtxt(file_path, delimiter=delimiter, skip_header=skip_header)
-	return data
+    try:
+        data = np.genfromtxt(file_path, delimiter=delimiter, skip_header=skip_header)
+    except FileNotFoundError:
+        print(f"File {file_path} not found. Please specify a valid path with option --dataset or -d", file=sys.stderr)
+        exit(1)
+    except PermissionError:
+        print(f"Permission denied to access file {file_path}. Please check the permissions.", file=sys.stderr)
+        exit(1)
+    return data
 
-def output_result(theta0, theta1):
+def output_result(theta0, theta1, output_file):
     print(f"Theta0: {theta0}, Theta1: {theta1}")
-    open("result.json", "w").write(f"{{\"theta0\": {theta0}, \"theta1\": {theta1}}}")
+    try:
+        open(output_file, "w").write(f"{{\"theta0\": {theta0}, \"theta1\": {theta1}}}")
+    except PermissionError:
+        print(f"Permission denied to write to file {output_file}. Please check the permissions.", file=sys.stderr)
 
 # theta0 = intercept
 # theta1 = slope
@@ -108,6 +126,7 @@ if __name__ == '__main__':
     argparser.add_argument('--graphical', "-g", action="store_true", help='Show graphical representation of the dataset (default: True)')
     argparser.add_argument('--errors', "-e", action="store_true", help='Show graphical representation of the dataset (default: True)')
     argparser.add_argument('--learning_rate', "-lr", type=float, default=0.01, help='Learning rate for the gradient descend algorithm (default: 0.01)')
+    argparser.add_argument('--output', "-o", type=str, default='result.json', help='Output file for the results (default: result.json)')
 
     # Parse the arguments
     args = argparser.parse_args()
@@ -125,7 +144,7 @@ if __name__ == '__main__':
 
     theta0, theta1 = ft_linear_regression(data)
 
-    output_result(theta0, theta1)
+    output_result(theta0, theta1, args.output)
 
     if args.graphical:
         linear_regression_window(original_x, original_y, theta0, theta1)
