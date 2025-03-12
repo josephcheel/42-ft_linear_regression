@@ -103,6 +103,9 @@ def parse_dataset(file_path, delimiter=',', skip_header=True):
     except PermissionError:
         print(f"Permission denied to access file {file_path}. Please check the permissions.", file=sys.stderr)
         exit(1)
+    except Exception as e:
+        print(f"An error occurred while parsing the dataset: {e}", file=sys.stderr)
+        exit(1)
     return data
 
 def output_result(theta0, theta1, output_file):
@@ -139,6 +142,10 @@ if __name__ == '__main__':
     skip_header = args.skip_header
 
     data = parse_dataset(dataset_path, delimiter=delimiter, skip_header=skip_header)
+    if data is None or data.size == 0 or len(data.shape) < 2 or data.shape[1] < 2:
+        print("No sufficient columns to process or wrong format. Exiting...")
+        exit(1)
+
     original_x = data[:, 0].copy()  
     original_y = data[:, 1].copy()
 
