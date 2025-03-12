@@ -7,6 +7,8 @@ import signal
 LEARNING_RATE = 0.01
 MINIMUM_STEP_SIZE = 0.0001
 MAXIMUM_NUMBER_OF_STEPS = 1000
+STARTING_THETA0 = 0
+STARTING_THETA1 = 0
 
 error_list = []
 def handle_interrupt(signal, frame):
@@ -84,12 +86,12 @@ def ft_linear_regression(data):
     data, mean_x, std_x = standardization(data)
     standarized_x = data[:, 0]
     standarized_y = data[:, 1]
-    
-    result = ft_gradient_descend(0, 0, standarized_y, standarized_x)
+
+    theta0, theta1 = ft_gradient_descend(STARTING_THETA0, STARTING_THETA1, standarized_y, standarized_x)
 
     # Reverse the standardization
-    theta1 = result[1] * (std_x[1] / std_x[0])
-    theta0 = result[0] * std_x[1] + mean_x[1] - theta1 * mean_x[0]
+    theta1 = theta1 * (std_x[1] / std_x[0])
+    theta0 = theta0 * std_x[1] + mean_x[1] - theta1 * mean_x[0]
     
     return theta0, theta1
 
