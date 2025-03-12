@@ -120,7 +120,7 @@ def output_result(theta0, theta1, output_file):
 
 if __name__ == '__main__':
     argparser = argparse.ArgumentParser()
-    argparser.add_argument('--dataset', "-d", type=str, default='data.csv', help='Path to the dataset (default: data.csv)')
+    argparser.add_argument('--dataset', "-d", type=str, default='./data.csv', help='Path to the dataset (default: data.csv)')
     argparser.add_argument('--labelx', "-lx", type=str, default='X values', help='X-axis label')
     argparser.add_argument('--labely',"-ly",  type=str, default='Y values', help='Y-axis label')
     argparser.add_argument('--title', "-t", type=str, default='Linear Regression Plot', help='Title of the plot (default: Linear Regression Plot)')
