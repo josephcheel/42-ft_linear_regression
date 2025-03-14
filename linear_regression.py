@@ -122,19 +122,32 @@ def output_result(theta0, theta1, output_file):
 # theta1 = slope
 
 if __name__ == '__main__':
-    argparser = argparse.ArgumentParser()
-    argparser.add_argument('--dataset', "-d", type=str, default='./data.csv', help='Path to the dataset (default: data.csv)')
-    argparser.add_argument('--labelx', "-lx", type=str, default='X values', help='X-axis label')
-    argparser.add_argument('--labely',"-ly",  type=str, default='Y values', help='Y-axis label')
-    argparser.add_argument('--title', "-t", type=str, default='Linear Regression Plot', help='Title of the plot (default: Linear Regression Plot)')
-    argparser.add_argument('--delimiter', "-del", type=str, default=',', help='Delimiter for the dataset (default: \',\')')
-    argparser.add_argument('--skip_header',action="store_false", help='Skip header of the dataset (default: True)')
-    argparser.add_argument('--graphical', "-g", action="store_true", help='Show graphical representation of the dataset (default: True)')
-    argparser.add_argument('--errors', "-e", action="store_true", help='Show graphical representation of the dataset (default: True)')
-    argparser.add_argument('--learning_rate', "-lr", type=float, default=0.01, help='Learning rate for the gradient descend algorithm (default: 0.01)')
-    argparser.add_argument('--output', "-o", nargs='?', const='result.json', type=str, default='', help='Output file for the results as JSON (default: None)')
+    argparser = argparse.ArgumentParser(
+        description="Computes a Linear Regression using the Gradient Descent Algorithm with the specified dataset.")
 
-    # Parse the arguments
+    # Dataset-related arguments
+    dataset_group = argparser.add_argument_group('Dataset Options')
+    dataset_group.add_argument('--dataset', "-d", type=str, default='./data.csv', help="Path to the dataset.")
+    dataset_group.add_argument('--delimiter', "-del", type=str, default=',', help="Delimiter for the dataset.")
+    dataset_group.add_argument('--skip_header', action="store_false", help="Skip header of the dataset.")
+
+    # Plotting options
+    plot_group = argparser.add_argument_group('Plotting Options')
+    plot_group.add_argument('--graphical', "-g", action="store_true", help="Show graphical representation of the dataset.")
+    plot_group.add_argument('--errors', "-e", action="store_true", help="Show error graph.")
+    plot_group.add_argument('--labelx', "-lx", type=str, default='X values', help="X-axis label.")
+    plot_group.add_argument('--labely', "-ly", type=str, default='Y values', help="Y-axis label.")
+    plot_group.add_argument('--title', "-t", type=str, default='Linear Regression Plot', help="Title of the plot.")
+
+    # Algorithm options
+    algo_group = argparser.add_argument_group('Algorithm Options')
+    algo_group.add_argument('--learning_rate', "-lr", type=float, default=0.01, help="Learning rate for the Gradient Descent algorithm.")
+
+    # Output options
+    output_group = argparser.add_argument_group('Output Options')
+    output_group.add_argument('--output', "-o", nargs='?', const='result.json', type=str, default='', help="Output file for the results as JSON. (default: result.json)")
+
+    # Parse arguments
     args = argparser.parse_args()
     delimiter = args.delimiter
     dataset_path = args.dataset
