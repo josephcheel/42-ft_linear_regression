@@ -17,7 +17,7 @@ if __name__ == '__main__':
 	argparser.add_argument("--x", help="Mileage", type=float)
 	argparser.add_argument("--theta0", "-t0", help="Theta0", type=float, default=0.0)
 	argparser.add_argument("--theta1", "-t1", help="Theta1", type=float, default=0.0)
-	argparser.add_argument("--json", help="JSON file with thetas")
+	argparser.add_argument("--json","-j", help="JSON file with thetas")
 
 	args = argparser.parse_args()
 	if args.x is None:
