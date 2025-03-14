@@ -30,7 +30,7 @@ def linear_regression_window(original_x, original_y, theta0, theta1):
     # Plot regression line
     x_sorted = np.sort(original_x)
     y_predicted = theta0 + theta1 * x_sorted
-    plt.plot(x_sorted, y_predicted, color='blue', label='Fitted line')
+    plt.plot(x_sorted, y_predicted, color='blue', label=f"y = {theta1:.3f}…x + {theta0:.3f}…")
 
     plt.legend()
     plt.show()
@@ -132,7 +132,7 @@ if __name__ == '__main__':
     argparser.add_argument('--graphical', "-g", action="store_true", help='Show graphical representation of the dataset (default: True)')
     argparser.add_argument('--errors', "-e", action="store_true", help='Show graphical representation of the dataset (default: True)')
     argparser.add_argument('--learning_rate', "-lr", type=float, default=0.01, help='Learning rate for the gradient descend algorithm (default: 0.01)')
-    argparser.add_argument('--output', "-o", type=str, default='', help='Output file for the results as JSON (default: None)')
+    argparser.add_argument('--output', "-o", nargs='?', const='result.json', type=str, default='', help='Output file for the results as JSON (default: None)')
 
     # Parse the arguments
     args = argparser.parse_args()
