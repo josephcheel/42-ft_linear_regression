@@ -158,14 +158,24 @@ if __name__ == '__main__':
     skip_header = args.skip_header
 
     data = parse_dataset(dataset_path, delimiter=delimiter, skip_header=skip_header)
-    if data is None or data.size == 0 or len(data.shape) < 2 or data.shape[1] < 2:
-        print("No sufficient columns to process or wrong format. Exiting...")
+
+    
+    if data is None or data.size == 0 or len(data.shape) != 2 or data.shape[1] != 2 or data.shape[0] < 2:
+        print("Error: CSV file has an incorrect format. Possible issues include too many columns, too few rows, or mismatched data. Exiting...")
         exit(1)
 
-    original_x = data[:, 0].copy()  
-    original_y = data[:, 1].copy()
+    valid_rows = ~np.isnan(data).any(axis=1)
+    cleaned_data = data[valid_rows]
 
-    theta0, theta1 = ft_linear_regression(data, args.errors)
+    if cleaned_data is None or cleaned_data.size == 0 or len(cleaned_data.shape) != 2 or cleaned_data.shape[1] != 2 or cleaned_data.shape[0] < 2:
+        print("Error: CSV file has an incorrect format. Possible issues include too many columns, too few rows, or mismatched data. Exiting...")
+        exit(1)
+    
+    print(cleaned_data.shape, len(cleaned_data.shape))
+    original_x = cleaned_data[:, 0].copy()
+    original_y = cleaned_data[:, 1].copy()
+
+    theta0, theta1 = ft_linear_regression(cleaned_data, args.errors)
 
     print(f"Theta0: {theta0}, Theta1: {theta1}")
     if args.output:
