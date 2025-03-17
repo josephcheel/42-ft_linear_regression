@@ -61,11 +61,12 @@ def mean_bias_error(observed_x, observed_y, intercept, slope):
     
     return new_intercept, new_slope, errors
 
-def ft_gradient_descend(theta0, theta1, observed_y, observed_x):
+def ft_gradient_descend(theta0, theta1, observed_y, observed_x, errors):
 
     for step in range(MAXIMUM_NUMBER_OF_STEPS):
         new_theta0, new_theta1, error = mean_bias_error(observed_x, observed_y, theta0, theta1)
-        error_list.append(np.mean(error**2))
+        if errors:
+            error_list.append(np.mean(error**2))
     
         if abs(new_theta0 - theta0) < MINIMUM_STEP_SIZE and abs(new_theta1 - theta1) < MINIMUM_STEP_SIZE:
             print(f"Converged at step {step}")
@@ -80,14 +81,14 @@ def standardization(data):
     std = np.std(data, axis=0)
     return (data - mean) / std, mean, std
 
-def ft_linear_regression(data):
+def ft_linear_regression(data, errors):
     
     # Standardize the data
     data, mean_x, std_x = standardization(data)
     standarized_x = data[:, 0]
     standarized_y = data[:, 1]
 
-    theta0, theta1 = ft_gradient_descend(STARTING_THETA0, STARTING_THETA1, standarized_y, standarized_x)
+    theta0, theta1 = ft_gradient_descend(STARTING_THETA0, STARTING_THETA1, standarized_y, standarized_x, errors)
 
     # Reverse the standardization
     theta1 = theta1 * (std_x[1] / std_x[0])
@@ -111,7 +112,6 @@ def parse_dataset(file_path, delimiter=',', skip_header=True):
     return data
 
 def output_result(theta0, theta1, output_file):
-    print(f"Theta0: {theta0}, Theta1: {theta1}")
     try:
         open(output_file, "w").write(f"{{\"theta0\": {theta0}, \"theta1\": {theta1}}}")
         print(f"Results successfully saved to {output_file}")
@@ -165,10 +165,14 @@ if __name__ == '__main__':
     original_x = data[:, 0].copy()  
     original_y = data[:, 1].copy()
 
-    theta0, theta1 = ft_linear_regression(data)
+    theta0, theta1 = ft_linear_regression(data, args.errors)
 
+    print(f"Theta0: {theta0}, Theta1: {theta1}")
     if args.output:
         output_result(theta0, theta1, args.output)
+    if args.errors:
+        if error_list:
+            print(f"Last Error: {error_list[-1]}")
 
     if args.graphical:
         linear_regression_window(original_x, original_y, theta0, theta1)
